@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row mt-3">
+    <!-- Score Card -->
+    <div class="col-md-4">
+        <div class="card shadow mb-3">
+            <div class="card-body text-center">
+                <h4>Overall Score</h4>
+                <div class="display-1 fw-bold
+                    {% if score.total_score >= 70 %}text-success
+                    {% elif score.total_score >= 40 %}text-warning
+                    {% else %}text-danger{% endif %}">
+                    {{ score.total_score }}%
+                </div>
+                {% if job_description %}
+                <p class="mt-2">Job Match: <strong>{{ score.match_score }}%</strong></p>
+                {% else %}
+                <p class="mt-2 text-muted">No job description provided for matching</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Score Breakdown -->
+        <div class="card shadow mb-3">
+            <div class="card-body">
+                <h5>Score Breakdown</h5>
+                {% for category, value in score.breakdown.items() %}
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <strong>{{ category|title }}</strong>
+                        <span>{{ value }}%</span>
+                    </div>
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar
+                            {% if value >= 20 %}bg-success
+                            {% elif value >= 10 %}bg-warning
+                            {% else %}bg-danger{% endif %}"
+                            style="width: {{ value }}%"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Analysis Details -->
+    <div class="col-md-8">
+        <!-- Contact Info -->
+        <div class="card shadow mb-3">
+            <div class="card-body">
+                <h5>Contact Information</h5>
+                <div class="row">
+                    <div class="col-md-3">
+                        <strong>Name:</strong><br>
+                        {{ analysis.name or "Not found" }}
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Email:</strong><br>
+                        {{ analysis.email or "Not found" }}
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Phone:</strong><br>
+                        {{ analysis.phone or "Not found" }}
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Experience:</strong><br>
+                        {{ analysis.experience_years }} years
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills -->
+        <div class="card shadow mb-3">
+            <div class="card-body">
+                <h5>Skills Detected</h5>
+                <p><strong>Technical Skills:</strong><br>
+                    {% for skill in analysis.skills.technical %}
+                        <span class="badge bg-primary me-1 mb-1">{{ skill }}</span>
+                    {% endfor %}
+                    {% if not analysis.skills.technical %}
+                        <span class="text-muted">None detected</span>
+                    {% endif %}
+                </p>
+                <p><strong>Soft Skills:</strong><br>
+                    {% for skill in analysis.skills.soft %}
+                        <span class="badge bg-success me-1 mb-1">{{ skill }}</span>
+                    {% endfor %}
+                    {% if not analysis.skills.soft %}
+                        <span class="text-muted">None detected</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <!-- Education -->
+        <div class="card shadow mb-3">
+            <div class="card-body">
+                <h5>Education</h5>
+                <ul class="mb-0">
+                    {% for edu in analysis.education %}
+                        <li>{{ edu }}</li>
+                    {% endfor %}
+                    {% if not analysis.education %}
+                        <li class="text-muted">No education details detected</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Suggestions -->
+        <div class="card shadow mb-3 border-info">
+            <div class="card-body">
+                <h5>Improvement Suggestions</h5>
+                <ul class="mb-0">
+                    {% for suggestion in score.suggestions %}
+                        <li>{{ suggestion }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Missing Keywords -->
+        {% if score.missing_keywords %}
+        <div class="card shadow mb-3 border-warning">
+            <div class="card-body">
+                <h5>Missing Keywords from Job Description</h5>
+                {% for kw in score.missing_keywords[:15] %}
+                    <span class="badge bg-danger me-1 mb-1">{{ kw }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="text-center mb-5 mt-3">
+    <a href="/" class="btn btn-secondary btn-lg">Analyze Another Resume</a>
+</div>
+{% endblock %}

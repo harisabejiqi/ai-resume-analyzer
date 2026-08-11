@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h2 class="card-title text-center mb-4">Upload Your Resume</h2>
+                <p class="text-center text-muted mb-4">
+                    Get an AI-powered analysis of your resume with scoring, skill extraction, and improvement suggestions.
+                </p>
+                <form action="/analyze" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Resume (PDF or DOCX)</label>
+                        <input type="file" class="form-control" name="resume" accept=".pdf,.docx" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Job Description (optional)</label>
+                        <textarea class="form-control" name="job_description" rows="6"
+                                  placeholder="Paste the job description here to get a match score and keyword analysis..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 btn-lg">Analyze Resume</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
