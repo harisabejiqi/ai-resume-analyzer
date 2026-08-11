@@ -1,0 +1,11 @@
+flask
+flask-cors
+python-docx
+PyMuPDF
+scikit-learn
+sentence-transformers
+phonenumbers
+language-tool-python  # grammar/spell checking (requires a Java runtime)
+pywin32; sys_platform == "win32"  # legacy .doc parsing via Word COM automation
+scipy  # eval harness: correlation + significance tests (also a scikit-learn dep)
+matplotlib  # eval harness: result plots (optional — harness still runs without it)
