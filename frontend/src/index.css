@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+/* Enable class-based dark mode: the `dark:` variant applies whenever an
+ * ancestor (or the element itself) carries the `dark` class. We toggle that
+ * class on <html>. Most of the UI flips automatically because the surface
+ * tokens are redefined under `.dark` below — utilities resolve to CSS vars. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Design tokens — overrides Tailwind defaults to give the app its own palette,
+ * type scale, and radius rhythm. Modify these to re-theme the whole app. */
+@theme {
+  /* Brand palette: deep violet for primary, slate-zinc for surfaces.
+   * Pick a single accent and let it carry the identity. */
+  --color-brand-50: oklch(0.97 0.02 290);
+  --color-brand-100: oklch(0.94 0.04 290);
+  --color-brand-200: oklch(0.88 0.08 290);
+  --color-brand-300: oklch(0.79 0.13 290);
+  --color-brand-400: oklch(0.68 0.18 290);
+  --color-brand-500: oklch(0.58 0.22 290);
+  --color-brand-600: oklch(0.50 0.22 290);
+  --color-brand-700: oklch(0.42 0.20 290);
+  --color-brand-800: oklch(0.34 0.16 290);
+  --color-brand-900: oklch(0.26 0.12 290);
+
+  /* Surface neutrals */
+  --color-surface-0: oklch(1 0 0);
+  --color-surface-50: oklch(0.985 0.002 286);
+  --color-surface-100: oklch(0.97 0.003 286);
+  --color-surface-200: oklch(0.93 0.005 286);
+  --color-surface-300: oklch(0.86 0.008 286);
+  --color-surface-700: oklch(0.42 0.012 286);
+  --color-surface-800: oklch(0.30 0.012 286);
+  --color-surface-900: oklch(0.21 0.012 286);
+
+  /* Semantic state colors */
+  --color-success-500: oklch(0.65 0.16 150);
+  --color-success-100: oklch(0.95 0.05 150);
+  --color-warning-500: oklch(0.75 0.16 75);
+  --color-warning-100: oklch(0.96 0.06 85);
+  --color-danger-500: oklch(0.60 0.22 25);
+  --color-danger-100: oklch(0.95 0.05 25);
+
+  /* Type scale */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Radius rhythm */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+}
+
+/* Dark theme — we only re-map the *surface* scale. The semantic meaning of each
+ * step inverts (surface-0 becomes the darkest card, surface-900 the lightest
+ * text), so every `bg-surface-*` / `text-surface-*` / `border-surface-*` utility
+ * flips with zero component changes. The brand and pastel semantic palettes stay
+ * as-is — vivid violet buttons and light-tinted chips read well on dark. */
+.dark {
+  --color-surface-0: oklch(0.21 0.012 286);
+  --color-surface-50: oklch(0.17 0.012 286);
+  --color-surface-100: oklch(0.20 0.012 286);
+  --color-surface-200: oklch(0.30 0.012 286);
+  --color-surface-300: oklch(0.38 0.012 286);
+  --color-surface-700: oklch(0.72 0.012 286);
+  --color-surface-800: oklch(0.86 0.010 286);
+  --color-surface-900: oklch(0.97 0.004 286);
+
+  /* Soften the pastel chip backgrounds so they don't glow on dark surfaces. */
+  --color-brand-100: oklch(0.32 0.09 290);
+  --color-brand-200: oklch(0.40 0.12 290);
+  --color-brand-700: oklch(0.86 0.06 290);
+  --color-success-100: oklch(0.34 0.07 150);
+  --color-success-500: oklch(0.78 0.14 150);
+  --color-warning-100: oklch(0.36 0.07 75);
+  --color-warning-500: oklch(0.82 0.14 80);
+  --color-danger-100: oklch(0.34 0.09 25);
+  --color-danger-500: oklch(0.74 0.17 25);
+}
+
+html,
+body {
+  background: linear-gradient(
+    180deg,
+    var(--color-surface-50) 0%,
+    var(--color-surface-100) 100%
+  );
+  color: var(--color-surface-900);
+  font-family: var(--font-sans);
+  font-feature-settings: "cv11", "ss01", "ss03";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Ease the page background swap when toggling themes. Per-element easing is
+ * left to the components' own transition utilities to avoid clobbering them. */
+html,
+body {
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
+}
+
+#root {
+  min-height: 100dvh;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
