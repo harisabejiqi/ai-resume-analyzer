@@ -1,0 +1,6 @@
+DevOps Engineer with 5 years automating infrastructure and delivery pipelines.
+Provisioned cloud environments on AWS and Azure with Terraform and Ansible.
+Operated Kubernetes clusters in production, including autoscaling, ingress and observability.
+Built CI/CD pipelines in GitLab CI and Jenkins, cutting release time from days to under an hour.
+Set up monitoring and alerting with Prometheus and Grafana; led incident response and postmortems.
+Hardened deployments with secrets management, image scanning and least-privilege IAM policies.

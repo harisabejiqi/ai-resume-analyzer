@@ -1,0 +1,13 @@
+We are hiring a DevOps / Platform Engineer to own our cloud infrastructure and deployment tooling.
+
+Responsibilities:
+- Manage and scale our Kubernetes-based container platform
+- Define infrastructure as code and keep environments reproducible
+- Maintain and improve CI/CD pipelines used by all engineering teams
+- Build monitoring, logging and alerting so issues are caught early
+
+Requirements:
+- Hands-on experience with a major cloud provider (AWS, Azure or GCP)
+- Proficiency with Terraform or similar infrastructure-as-code tools
+- Experience operating containers and orchestration in production
+- On-call mindset: comfortable troubleshooting live systems under pressure

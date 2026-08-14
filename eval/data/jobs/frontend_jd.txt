@@ -1,0 +1,13 @@
+We are looking for a Frontend Engineer to build the user-facing side of our web platform.
+
+Responsibilities:
+- Develop responsive user interfaces in React and TypeScript
+- Translate design mockups into pixel-perfect, accessible components
+- Optimize page performance and loading times
+- Integrate the UI with backend APIs
+
+Requirements:
+- Solid experience with modern JavaScript frameworks, preferably React
+- Strong command of HTML, CSS and responsive design
+- Experience with state management and client-side testing
+- An eye for usability and attention to visual detail

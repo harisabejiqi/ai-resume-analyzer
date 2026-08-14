@@ -1,0 +1,17 @@
+Blerim Aliu
+blerim.aliu@company.org
++383 45 700 900
+
+Summary
+Backend developer with 6 years of experience on enterprise systems.
+
+Skills
+C#, .NET, Azure, SQL Server, Docker, Kubernetes
+
+Experience
+Senior Developer, Enterprise Solutions - 2018 - 2024
+- Designed and maintained .NET microservices on Azure.
+- Mentored three junior developers.
+
+Education
+Bachelor of Science in Computer Engineering, South East European University, 2017

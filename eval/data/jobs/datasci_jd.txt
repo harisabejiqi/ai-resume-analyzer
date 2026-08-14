@@ -1,0 +1,13 @@
+Seeking a Data Scientist to build machine learning models and analyze large datasets.
+
+Responsibilities:
+- Develop predictive algorithms and statistical models
+- Perform exploratory analysis and feature engineering
+- Work with deep learning frameworks to solve business problems
+- Communicate findings to non-technical stakeholders
+
+Requirements:
+- Proficiency in Python and the scientific stack (pandas, NumPy, scikit-learn)
+- Experience with TensorFlow or PyTorch
+- Strong foundations in mathematics and statistics
+- Exposure to natural language processing is a plus

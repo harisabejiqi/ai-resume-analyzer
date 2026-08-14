@@ -1,0 +1,18 @@
+Arta Gashi
+arta.gashi@outlook.com
++355 69 201 2345
+Tirana, Albania
+
+Professional Summary
+Data analyst with 3 years of experience turning data into decisions.
+
+Technical Skills
+Python, SQL, pandas, NumPy, Tableau, machine learning
+
+Experience
+Data Analyst, Insight Co - 2021 - 2024
+- Designed dashboards used by 40 stakeholders.
+- Automated weekly reporting and saved 10 hours per week.
+
+Education
+Master of Science in Statistics, University of Tirana, 2021

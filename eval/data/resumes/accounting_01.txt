@@ -1,0 +1,6 @@
+Certified Accountant with 7 years in financial reporting and analysis.
+Prepared monthly closings, balance sheets and income statements in accordance with IFRS.
+Managed accounts payable and receivable, payroll and VAT declarations for a mid-sized firm.
+Built Excel financial models and Power BI dashboards to track budgets and cash flow.
+Supported annual audits and liaised with external auditors and tax authorities.
+Automated recurring reports with SQL queries against the company ERP system.

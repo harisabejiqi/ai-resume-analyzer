@@ -1,0 +1,6 @@
+Senior Backend Engineer with 6 years building scalable server-side systems.
+Designed and built RESTful web services and microservices in Python and Java.
+Hands-on with PostgreSQL, Redis, Docker, Kubernetes and AWS.
+Led the migration of a monolith to event-driven services using Kafka.
+Optimized database queries and reduced API latency by 40%.
+Owned CI/CD pipelines and automated deployments for a team of eight engineers.

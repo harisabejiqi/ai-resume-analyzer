@@ -1,0 +1,6 @@
+Data Scientist with a strong background in machine learning and statistical modeling.
+Skilled in Python, pandas, NumPy, scikit-learn and TensorFlow.
+Built predictive models, performed feature engineering and deployed ML pipelines to production.
+Comfortable with SQL and data visualization for stakeholder reporting.
+Published work on natural language processing and text classification.
+Collaborated with engineering teams to ship models behind internal APIs.

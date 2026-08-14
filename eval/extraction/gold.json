@@ -1,0 +1,51 @@
+{
+  "_about": "Hand-labeled ground truth for the information-extraction evaluation. One entry per resume in eval/extraction/resumes/. 'phone' is the national significant number (digits only, no country code); the harness matches on a digit-suffix so the extractor's +CC international form still counts as correct. 'skills_technical' lists the software-skill vocabulary tokens a human judges to be genuinely indicated by the resume (including ones the keyword matcher cannot know, e.g. 'tableau', 'c#' — these are real recall misses). 'name'/'email' null means the field is genuinely absent.",
+  "besnik_krasniqi.txt": {
+    "name": "Besnik Krasniqi",
+    "email": "besnik.krasniqi@gmail.com",
+    "phone": "44123456",
+    "skills_technical": ["python", "flask", "react", "typescript", "postgresql", "docker", "git"],
+    "education_present": true,
+    "experience_years": 5
+  },
+  "arta_gashi.txt": {
+    "name": "Arta Gashi",
+    "email": "arta.gashi@outlook.com",
+    "phone": "692012345",
+    "skills_technical": ["python", "sql", "pandas", "numpy", "tableau", "machine learning"],
+    "education_present": true,
+    "experience_years": 3
+  },
+  "john_smith.txt": {
+    "name": "John Smith",
+    "email": "john.smith@example.com",
+    "phone": "4155550132",
+    "skills_technical": ["java", "spring boot", "javascript", "node.js", "aws", "kubernetes", "docker", "microservices"],
+    "education_present": true,
+    "experience_years": 10
+  },
+  "curriculum_vitae_header.txt": {
+    "name": "Driton Berisha",
+    "email": "driton.berisha@gmail.com",
+    "phone": "49888777",
+    "skills_technical": ["javascript", "typescript", "react", "vue.js", "html", "css", "git"],
+    "education_present": true,
+    "experience_years": 4
+  },
+  "elira_hoxha.txt": {
+    "name": "Elira Hoxha",
+    "email": null,
+    "phone": "44555212",
+    "skills_technical": [],
+    "education_present": true,
+    "experience_years": 7
+  },
+  "blerim_aliu.txt": {
+    "name": "Blerim Aliu",
+    "email": "blerim.aliu@company.org",
+    "phone": "45700900",
+    "skills_technical": ["c#", ".net", "azure", "sql", "docker", "kubernetes", "microservices"],
+    "education_present": true,
+    "experience_years": 6
+  }
+}

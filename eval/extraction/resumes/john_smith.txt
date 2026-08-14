@@ -1,0 +1,16 @@
+John Smith
+john.smith@example.com
+(415) 555-0132
+
+Experience
+Senior Software Developer, Globex - 2016 - 2023
+- Led a team of six engineers building microservices in Java and Spring Boot.
+- Migrated infrastructure to AWS and Kubernetes.
+Software Developer, Initech - 2013 - 2016
+- Developed internal tools in JavaScript and Node.js.
+
+Education
+B.Sc. in Software Engineering, State University, 2013
+
+Skills
+Java, Spring Boot, JavaScript, Node.js, AWS, Kubernetes, Docker

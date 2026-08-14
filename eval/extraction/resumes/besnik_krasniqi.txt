@@ -1,0 +1,19 @@
+Besnik Krasniqi
+Software Engineer
+Email: besnik.krasniqi@gmail.com
+Phone: 044 123 456
+Prishtine, Kosovo
+
+Summary
+Software engineer with 5 years of experience building web applications.
+
+Skills
+Python, Flask, React, TypeScript, PostgreSQL, Docker, Git
+
+Work Experience
+Backend Developer, Acme Tech - Jan 2019 - Mar 2024
+- Built REST services serving 2M requests per day.
+- Reduced latency by 30% through query optimization.
+
+Education
+Bachelor of Science in Computer Science, University of Prishtina, 2018

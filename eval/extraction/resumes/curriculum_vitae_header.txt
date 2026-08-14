@@ -1,0 +1,17 @@
+Curriculum Vitae
+
+Name: Driton Berisha
+Contact: driton.berisha@gmail.com | 049 888 777
+
+Profile
+Front-end developer with 4 years of experience crafting responsive interfaces.
+
+Skills
+JavaScript, TypeScript, React, Vue.js, HTML, CSS, Git
+
+Experience
+Front-end Developer, WebStudio - Feb 2020 - Jan 2024
+- Built component libraries used across five products.
+
+Education
+Bachelor degree in Information Technology, AAB College, 2019

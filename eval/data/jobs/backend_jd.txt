@@ -1,0 +1,13 @@
+We are hiring a Backend Developer to develop and maintain our distributed web services.
+
+Responsibilities:
+- Design and implement microservices and the APIs between them
+- Write clean, well-tested Python code
+- Model and manage relational databases
+- Deploy to cloud infrastructure using containers and orchestration
+
+Requirements:
+- Strong experience with server-side development
+- Proficiency with SQL databases and REST APIs
+- Familiarity with CI/CD pipelines and automated deployment
+- Comfortable working with Docker and cloud platforms such as AWS

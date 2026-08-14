@@ -1,0 +1,6 @@
+Frontend Developer with 4 years crafting responsive single-page applications.
+Built component libraries and dashboards in React and TypeScript, styled with CSS-in-JS and Tailwind.
+Improved Core Web Vitals and cut bundle size by 35% through code splitting and lazy loading.
+Collaborated with designers in Figma to turn wireframes into accessible, WCAG-compliant interfaces.
+Wrote unit and end-to-end tests with Jest and Playwright.
+Consumed REST and GraphQL APIs and handled client-side state with Redux and React Query.
