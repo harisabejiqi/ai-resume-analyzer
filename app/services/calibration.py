@@ -45,6 +45,18 @@ def is_fitted():
     return _params.get("method") != "identity"
 
 
+def fitted_for():
+    """Name of the scoring method these parameters were fit for, or None.
+
+    Written by `eval/calibrate.py --method NAME`. Callers should check this before
+    applying the mapping: the parameters describe one method's score distribution,
+    so feeding a different method's scores through them miscalibrates the result
+    without any error being raised. Returns None for parameter files written
+    before this field existed.
+    """
+    return _params.get("fit_for")
+
+
 def _logistic(z):
     """Numerically stable logistic; avoids overflow for large |z|."""
     if z >= 0:

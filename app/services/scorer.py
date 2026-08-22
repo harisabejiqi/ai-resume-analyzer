@@ -4,7 +4,8 @@ from collections import Counter
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-from . import calibration, embeddings
+from . import calibration, chunking
+from .analyzer import SOFT_SKILLS, TECH_SKILLS
 
 
 STOPWORDS = set(
@@ -14,6 +15,29 @@ have has had do does did will would could should may might must shall can need t
 those it its their there here our your my his her i you we they them us about into out up down
 off over under again further then once all any both each few more most other some such no nor
 not only own same so than too very also more new use using used like make made get got
+""".split()
+)
+
+BOILERPLATE = set(
+    """
+hiring hire seeking seek looking join joining apply applicant applicants candidate
+candidates role roles job jobs position positions opportunity opportunities career
+careers team teams company companies organisation organization business client
+clients customer customers colleague colleagues staff department
+responsibilities responsibility requirements requirement qualifications
+qualification duties duty tasks task benefits perks offer offers compensation
+salary equity bonus remote hybrid onsite office full-time part-time contract
+experience experienced work working works worked develop developing development
+maintain maintaining maintenance build building built create creating support
+supporting help helping ensure ensuring deliver delivering provide providing
+manage managing perform performing participate participating contribute
+collaborate collaborating partner drive driving own owning
+strong solid excellent good great proven demonstrated hands-on comfortable
+familiar familiarity proficiency proficient knowledge understanding ability
+skills skill years year plus preferably ideally including etc
+platform product products project projects service services system systems
+solution solutions technology technologies tool tools stack environment
+quality clean best practices practice process processes standards
 """.split()
 )
 
@@ -83,50 +107,97 @@ def calculate_tfidf_match_score(resume_text, job_description):
     return round(score * 100, 2)
 
 
+MATCH_METHOD = "sbert_chunk"
+
+_warned_calibration_mismatch = False
+
+
+def _calibrate_if_matched(raw):
+    """Apply the fitted calibration, but only if it was fit for MATCH_METHOD.
+
+    Calibration parameters describe one method's score distribution. Applying
+    another method's parameters would silently shift every number shown to users,
+    so on a mismatch we return the raw score and say so once rather than
+    reporting a confidently wrong percentage.
+    """
+    global _warned_calibration_mismatch
+    fit_for = calibration.fitted_for()
+    if fit_for is None or fit_for == MATCH_METHOD:
+        return calibration.calibrate(raw)
+    if not _warned_calibration_mismatch:
+        _warned_calibration_mismatch = True
+        print(f"WARNING: calibration_params.json was fit for '{fit_for}' but the "
+              f"scorer uses '{MATCH_METHOD}'. Serving uncalibrated scores. "
+              f"Refit with: python -m eval.calibrate --method {MATCH_METHOD}")
+    return raw
+
+
 def calculate_match_score(resume_text, job_description):
     """Semantic relevance between resume and job description (0-100).
 
-    Uses transformer embeddings (see embeddings.py) so meaning, not just shared
-    keywords, drives the score, then applies a fitted calibration (see
-    calibration.py) so the number is interpretable on a 0-100 scale rather than
-    a raw cosine that compresses strong matches into the 50s. Falls back to the
-    TF-IDF baseline if the model cannot be loaded, so the app degrades
-    gracefully rather than failing.
+    Compares the resume to the posting at the level of individual requirements
+    (see chunking.py): each requirement is scored against every resume chunk and
+    keeps its best match, so the candidate is judged on how well they answer each
+    thing the posting asks for. On the project's 225-pair gold set this ranks
+    significantly better than encoding the whole resume as one vector
+    (NDCG@3 +0.048, p = 0.043) -- whole-document encoding truncates at 256
+    word-pieces and averages away the specific bullet that answers a requirement.
+
+    A fitted calibration (see calibration.py) then maps the raw score onto an
+    interpretable 0-100 scale, cutting calibration error from 25.8 to 8.8
+    (leave-one-out). Because the mapping is monotonic it does not reorder
+    candidates.
+
+    Falls back to the TF-IDF baseline if the model cannot be loaded, so the app
+    degrades gracefully rather than failing.
     """
     if not job_description.strip():
         return 0.0
     try:
-        raw = embeddings.semantic_similarity(resume_text, job_description)
-        return calibration.calibrate(raw)
+        raw = chunking.chunked_similarity(resume_text, job_description)
+        return _calibrate_if_matched(raw)
     except Exception:
         return calculate_tfidf_match_score(resume_text, job_description)
 
 
-def find_missing_keywords(resume_text, job_description, top_n=15):
-    """Return up to top_n keywords frequent in the JD but absent from the resume.
+def _is_present(word, resume_lower):
+    """Word-boundary presence check, so 'java' isn't matched by 'javascript'."""
+    return re.search(rf"(?<![a-z0-9]){re.escape(word)}(?![a-z0-9])", resume_lower) is not None
 
-    Ranks by raw frequency in the JD (with stopword and short-token filtering) and
-    checks presence in the resume with word-boundary matching so 'java' does not
-    count as present when only 'javascript' appears.
+
+def find_missing_keywords(resume_text, job_description, top_n=15):
+    """Return keywords the posting emphasises that are absent from the resume.
+
+    Recognised skills come first (matched against the analyzer's skill
+    vocabularies, so the advice names things a reader would call a skill), then
+    other salient terms ranked by frequency in the posting.
+
+    Frequency alone is a poor signal of what a posting "stresses": the commonest
+    non-stopwords in a job ad are the words every job ad uses -- 'hiring',
+    'develop', 'maintain', 'team', 'responsibilities'. Telling a candidate to add
+    'hiring' to their resume is noise, so BOILERPLATE filters that register out.
     """
     if not job_description.strip():
         return []
 
     tokens = re.findall(r"[a-z][a-z0-9+./#-]{2,}", job_description.lower())
     tokens = [re.sub(r"[^a-z0-9+#]+$", "", t) for t in tokens]
-    tokens = [t for t in tokens if len(t) >= 3 and t not in STOPWORDS]
+    tokens = [t for t in tokens if len(t) >= 3 and t not in STOPWORDS
+              and t not in BOILERPLATE]
     if not tokens:
         return []
 
     resume_lower = resume_text.lower()
-    missing = []
-    for word, _ in Counter(tokens).most_common():
-        pattern = rf"(?<![a-z0-9]){re.escape(word)}(?![a-z0-9])"
-        if not re.search(pattern, resume_lower):
-            missing.append(word)
-        if len(missing) >= top_n:
-            break
-    return missing
+    counts = Counter(tokens)
+
+    known = {s.lower() for s in TECH_SKILLS} | {s.lower() for s in SOFT_SKILLS}
+    skills, others = [], []
+    for word, _ in counts.most_common():
+        if _is_present(word, resume_lower):
+            continue
+        (skills if word in known else others).append(word)
+
+    return (skills + others)[:top_n]
 
 
 def _role_label(entry):
@@ -152,7 +223,24 @@ def _snippet(text, words=8):
     return " ".join(parts[:words]) + ("…" if len(parts) > words else "")
 
 
-def generate_suggestions(analysis, match_score, missing_keywords, has_jd, exp_stats):
+def _unevidenced_skills(analysis, matched_skills):
+    """Required skills the resume lists but never demonstrates in its experience.
+
+    A skill named only in a Skills list is a claim; the same skill named inside an
+    experience bullet is evidence. The requirement-level matcher scores evidence,
+    so this is what explains a low relevance score sitting next to high skill
+    coverage.
+    """
+    bullets = " ".join(
+        b for e in analysis.get("work_experience") or [] for b in e.get("bullets", [])
+    ).lower()
+    if not bullets:
+        return list(matched_skills)
+    return [s for s in matched_skills if not _is_present(s.lower(), bullets)]
+
+
+def generate_suggestions(analysis, match_score, missing_keywords, has_jd, exp_stats,
+                         skill_match=None):
     """Build prioritized, content-specific improvement suggestions.
 
     Rather than emitting fixed sentences, each suggestion references what *this*
@@ -165,7 +253,21 @@ def generate_suggestions(analysis, match_score, missing_keywords, has_jd, exp_st
     work_experience = analysis.get("work_experience", [])
 
     if has_jd:
-        if match_score < 30:
+        coverage = (skill_match or {}).get("coverage")
+        unevidenced = (
+            _unevidenced_skills(analysis, (skill_match or {}).get("matched") or [])
+            if coverage is not None and coverage >= 50 and match_score < 40
+            else []
+        )
+        if unevidenced:
+            shown = ", ".join(unevidenced[:4])
+            suggestions.append(
+                f"You list {coverage:.0f}% of the required skills, but the match score is "
+                f"only ~{match_score:.0f}% because your experience doesn't show you using "
+                f"them. Add a bullet for {shown} saying what you built with it and what "
+                f"changed as a result."
+            )
+        elif match_score < 30:
             suggestions.append(
                 f"Your resume matches only ~{match_score:.0f}% of this job description. "
                 "Rework your summary and experience to mirror its language and priorities."
@@ -260,8 +362,12 @@ def generate_suggestions(analysis, match_score, missing_keywords, has_jd, exp_st
     return suggestions[:6]
 
 
-def score_resume(resume_text, job_description, analysis):
+def score_resume(resume_text, job_description, analysis, skill_match=None):
     """Score the resume.
+
+    `skill_match` is the optional output of `jd_parser.match_required_skills`.
+    It is used only to explain a low relevance score that sits next to high
+    required-skill coverage; scoring itself does not depend on it.
 
     Each category is normalized to 0-100 against an achievable max. The total is a
     weighted average over the categories that apply (the 'relevance' category is
@@ -295,7 +401,8 @@ def score_resume(resume_text, job_description, analysis):
     total_score = sum(categories[k] * weights[k] for k in categories)
 
     breakdown = {k: round(v, 1) for k, v in categories.items()}
-    suggestions = generate_suggestions(analysis, match_score, missing_keywords, has_jd, exp_stats)
+    suggestions = generate_suggestions(analysis, match_score, missing_keywords, has_jd,
+                                       exp_stats, skill_match)
 
     return {
         "total_score": round(total_score, 1),

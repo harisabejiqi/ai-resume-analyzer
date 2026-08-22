@@ -58,7 +58,19 @@ def api_analyze():
             }), 422
 
         analysis = analyze_resume(resume_text)
-        score_result = score_resume(resume_text, job_description, analysis)
+
+        jd_result = None
+        if job_description.strip():
+            jd_result = parse_job_description(job_description)
+            jd_result["skill_match"] = match_required_skills(
+                jd_result["required_skills"]["technical"],
+                analysis["skills"]["technical"],
+            )
+
+        score_result = score_resume(
+            resume_text, job_description, analysis,
+            skill_match=jd_result["skill_match"] if jd_result else None,
+        )
 
 
         grammar_result = check_grammar(resume_text)
@@ -71,14 +83,6 @@ def api_analyze():
             msg = f"Fix {grammar_result['issue_count']} grammar/spelling issue(s)"
             score_result["suggestions"].insert(0, f"{msg} (e.g. {examples})." if examples else f"{msg}.")
 
-
-        jd_result = None
-        if job_description.strip():
-            jd_result = parse_job_description(job_description)
-            jd_result["skill_match"] = match_required_skills(
-                jd_result["required_skills"]["technical"],
-                analysis["skills"]["technical"],
-            )
 
         return jsonify({
             "analysis": analysis,
