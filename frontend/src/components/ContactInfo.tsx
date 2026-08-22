@@ -7,11 +7,11 @@ interface Props {
 
 function Field({ label, value }: { label: string; value: string | number | null }) {
   return (
-    <div>
+    <div className="min-w-0">
       <dt className="text-xs font-medium uppercase tracking-wide text-surface-700">
         {label}
       </dt>
-      <dd className="mt-1 text-sm font-medium text-surface-900">
+      <dd className="mt-1 break-words text-sm font-medium text-surface-900">
         {value || <span className="text-surface-700/70">Not found</span>}
       </dd>
     </div>

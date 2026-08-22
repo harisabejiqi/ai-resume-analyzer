@@ -53,7 +53,7 @@ export default function ScoreCharts({ score }: Props) {
       <h2 className="text-sm font-medium uppercase tracking-wide text-surface-700">
         Visual breakdown
       </h2>
-      <div className="mt-5 grid gap-8 md:grid-cols-2">
+      <div className="mt-5 grid gap-8 xl:grid-cols-2">
         <figure className="flex flex-col items-center">
           <RadarChart data={radarData} />
           <figcaption className="mt-2 text-center text-xs text-surface-700">

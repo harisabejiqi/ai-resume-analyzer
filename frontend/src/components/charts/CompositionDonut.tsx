@@ -84,7 +84,7 @@ export default function CompositionDonut({
         </div>
       </div>
 
-      <ul className="w-full space-y-2 text-sm">
+      <ul className="w-full min-w-0 space-y-2 text-sm">
         {segments.map((s) => (
           <li key={s.label} className="flex items-center justify-between gap-3">
             <span className="flex items-center gap-2 text-surface-900">
