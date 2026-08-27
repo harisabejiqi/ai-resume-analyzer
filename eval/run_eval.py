@@ -16,10 +16,12 @@ import sys
 if __package__ in (None, ""):
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import numpy as np
+from scipy.optimize import curve_fit
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-from app.services import embeddings
+from app.services import chunking, embeddings
 from app.services.scorer import calculate_tfidf_match_score
 from eval import metrics
 
@@ -98,19 +100,87 @@ def build_methods(pairs):
         methods["sbert"] = lambda p: embeddings.semantic_similarity(
             p["resume_text"], p["job_text"]
         )
+        methods["sbert_chunk"] = lambda p: chunking.chunked_similarity(
+            p["resume_text"], p["job_text"]
+        )
+
         from app.services import calibration
-        if calibration.is_fitted():
-            methods["sbert_cal"] = lambda p: calibration.calibrate(
-                embeddings.semantic_similarity(p["resume_text"], p["job_text"])
-            )
+        base = calibration.fitted_for() or "sbert"
+        if calibration.is_fitted() and base in methods:
+            scorer_fn = methods[base]
+            methods[base + "_cal_shipped"] = lambda p, f=scorer_fn: calibration.calibrate(f(p))
+        elif calibration.is_fitted():
+            print(f"NOTE: shipped calibration was fit for '{base}', which is not among "
+                  f"the evaluated methods -- skipping the shipped-calibration row.\n")
     else:
         print("WARNING: SBERT model unavailable (library/weights missing) -- "
               "skipping the semantic method.\n")
     return methods
 
 
+
+def _logistic_pct(x, k, x0):
+    return 100.0 / (1.0 + np.exp(-k * (np.asarray(x, dtype=float) / 100.0 - x0)))
+
+
+def _loo_calibrated(pairs, name, max_grade=2):
+    """Leave-one-out logistic calibration of `name`, as a list aligned to `pairs`.
+
+    Each pair is scored by parameters fit on the *other* pairs, so the calibrated
+    column is out-of-sample rather than fit on what it scores. Methods live on
+    very different raw scales (corpus TF-IDF spans ~0-25, chunked SBERT ~20-60),
+    so calibrating both onto the human-grade scale is what makes a blend of the
+    two meaningful rather than a silent weighting by scale.
+    """
+    raw = np.array([p[name] for p in pairs], dtype=float)
+    target = np.array(
+        [metrics.target_score(p["relevance"], max_grade) for p in pairs], dtype=float
+    )
+    out = []
+    for i in range(len(pairs)):
+        mask = np.ones(len(pairs), dtype=bool)
+        mask[i] = False
+        try:
+            popt, _ = curve_fit(
+                _logistic_pct, raw[mask], target[mask], p0=[10.0, 0.4], maxfev=20000
+            )
+            out.append(float(_logistic_pct(raw[i], *popt)))
+        except (RuntimeError, ValueError):
+            out.append(float(raw[i]))
+    return out
+
+
+def add_ablation_methods(pairs, methods, weight=0.5):
+    """Add calibrated + hybrid rows, in place, after the base methods are scored.
+
+    `hybrid` is a convex blend of the calibrated corpus-TF-IDF and calibrated
+    chunked-SBERT scores. Both inputs are on the calibrated 0-100 grade scale, so
+    `weight` is a genuine lexical/semantic trade-off rather than an artefact of
+    the two methods' raw ranges.
+    """
+    added = []
+    for base in ("tfidf_corpus", "sbert_chunk"):
+        if base in methods:
+            for p, v in zip(pairs, _loo_calibrated(pairs, base)):
+                p[base + "_cal"] = round(v, 2)
+            added.append(base + "_cal")
+
+    if {"tfidf_corpus_cal", "sbert_chunk_cal"} <= set(added):
+        for p in pairs:
+            p["hybrid"] = round(
+                weight * p["tfidf_corpus_cal"] + (1 - weight) * p["sbert_chunk_cal"], 2
+            )
+        added.append("hybrid")
+
+    for name in added:
+        methods[name] = None
+    return added
+
+
 def score_pairs(pairs, methods):
     for name, fn in methods.items():
+        if fn is None:
+            continue
         for p in pairs:
             p[name] = float(fn(p))
 
@@ -190,18 +260,60 @@ def render_markdown(pairs, methods, rows, per_query_ndcg):
         out.append(f"| `{name}` | " + " | ".join(cells) + " |")
     out.append("")
 
-    if "sbert" in methods and "tfidf" in methods:
-        out.append("## Significance (paired Wilcoxon on per-query NDCG@3)\n")
-        for baseline in ("tfidf", "tfidf_corpus"):
-            if baseline in methods:
-                p = metrics.paired_wilcoxon(per_query_ndcg["sbert"], per_query_ndcg[baseline])
-                p_str = "n/a (too few queries)" if p is None else f"p = {p:.4f}"
-                out.append(f"- `sbert` vs `{baseline}`: {p_str}")
-        out.append("")
-        out.append("> NOTE: with only a handful of queries this test has almost no "
-                   "power. Expand the gold set (see eval/README.md) before quoting p-values.\n")
+    out.append("## Calibration error (mean |predicted - grade target|, lower is better)\n")
+    out.append("| Method | calibration error |")
+    out.append("|---|---|")
+    for name in methods:
+        out.append(f"| `{name}` | {metrics.calibration_error(pairs, name):.2f} |")
+    out.append("")
+
+    out.extend(_render_significance(methods, per_query_ndcg))
 
     return "\n".join(out)
+
+
+_COMPARISONS = [
+    ("tfidf_corpus", "tfidf", "does corpus-fit IDF beat the shipped two-document fit?"),
+    ("sbert", "tfidf_corpus", "does whole-document semantic matching beat the lexical baseline?"),
+    ("sbert_chunk", "sbert", "does section/requirement-level chunking beat whole-document?"),
+    ("sbert_chunk", "tfidf_corpus", "does chunked semantic matching beat the lexical baseline?"),
+    ("hybrid", "tfidf_corpus_cal", "does adding a semantic component beat calibrated lexical alone?"),
+    ("hybrid", "sbert_chunk_cal", "does adding a lexical component beat calibrated chunked alone?"),
+]
+
+
+def _render_significance(methods, per_query_ndcg):
+    """The paired-Wilcoxon table: every comparison the ablation is meant to settle.
+
+    Reported on per-query NDCG@3, so the unit of analysis is a resume ranking the
+    jobs. `n` is the number of queries the test actually used -- queries with no
+    relevant job are undefined for NDCG and are excluded, so `n` can be below the
+    gold set's query count.
+    """
+    usable = [(a, b, q) for a, b, q in _COMPARISONS if a in methods and b in methods]
+    if not usable:
+        return []
+
+    n_queries = len(next(iter(per_query_ndcg.values()))) if per_query_ndcg else 0
+    out = ["## Significance (paired Wilcoxon on per-query NDCG@3)\n"]
+    out.append(f"Tested over {n_queries} queries. `*` marks p < 0.05. The test is "
+               "two-sided, so read `dNDCG` for the direction: it is method A's mean "
+               "NDCG@3 minus method B's, over the queries the test used.\n")
+    out.append("| Comparison | dNDCG | p | | Question |")
+    out.append("|---|---|---|---|---|")
+    for a, b, question in usable:
+        p = metrics.paired_wilcoxon(per_query_ndcg[a], per_query_ndcg[b])
+        va, vb = metrics.align(per_query_ndcg[a], per_query_ndcg[b])
+        delta = (sum(va) / len(va) - sum(vb) / len(vb)) if va else float("nan")
+        p_str = "n/a" if p is None else f"{p:.4f}"
+        star = "*" if p is not None and p < 0.05 else ""
+        out.append(f"| `{a}` vs `{b}` | {delta:+.3f} | {p_str} | {star} | {question} |")
+    out.append("")
+    out.append("> A non-significant result is not evidence of no effect: at this gold-set "
+               "size the test only resolves fairly large differences. Note also that the "
+               "labels themselves drive these outcomes -- see eval/README.md on the grading "
+               "rule before quoting any p-value.\n")
+    return out
 
 
 def write_csv(path, methods, rows):
@@ -288,6 +400,8 @@ def main():
     ap.add_argument("--out", default=DEFAULT_OUT)
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--no-plots", action="store_true")
+    ap.add_argument("--hybrid-weight", type=float, default=0.5,
+                    help="weight on calibrated corpus TF-IDF in the hybrid (0-1)")
     args = ap.parse_args()
 
     os.makedirs(args.out, exist_ok=True)
@@ -299,6 +413,10 @@ def main():
     methods = build_methods(pairs)
     print("Scoring with:", ", ".join(methods), "...")
     score_pairs(pairs, methods)
+
+    derived = add_ablation_methods(pairs, methods, weight=args.hybrid_weight)
+    if derived:
+        print("Ablation rows (LOO-calibrated):", ", ".join(derived))
 
     rows, per_query_ndcg = compute_report(pairs, methods, seed=args.seed)
     report = render_markdown(pairs, methods, rows, per_query_ndcg)

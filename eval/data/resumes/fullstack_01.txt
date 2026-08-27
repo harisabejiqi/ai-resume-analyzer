@@ -1,0 +1,31 @@
+Leonita Dervishi
+leonita.dervishi@example.com | +383 44 337 195 | Prishtina
+
+Summary
+Full-stack developer, 5 years. I work across the whole request path: interface
+components, the services behind them, and the schema underneath. Equally
+comfortable owning a feature end to end or picking up either side of it.
+
+Work Experience
+
+Full-stack Developer, Bardhi Digital
+August 2022 - Present
+- Built the customer-facing booking interface in React with TypeScript, 18,000 monthly users
+- Wrote the Python services behind it, including the availability and pricing endpoints
+- Designed the PostgreSQL schema and owned migrations across 25 tables
+- Reduced page load from 4.1s to 1.3s by reworking data fetching and adding Redis caching
+- Ran the deployment pipeline on Docker and AWS ECS
+
+Developer, Kodra Software
+June 2020 - July 2022
+- Delivered 9 client projects, most as the sole developer on both interface and server
+- Built REST endpoints in Flask and the Vue interfaces that consumed them
+- Set up automated tests covering the checkout flow
+
+Education
+BSc Computer Science, UBT College, 2016 - 2020
+
+Skills
+Technical: React, TypeScript, JavaScript, Vue, HTML, CSS, Python, Flask, Django,
+PostgreSQL, Redis, Docker, AWS, REST APIs, Git
+Soft: ownership, communication, adaptability

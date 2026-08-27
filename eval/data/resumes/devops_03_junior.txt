@@ -1,0 +1,28 @@
+Rron Maloku
+rron.maloku@example.com | +383 45 119 507 | Prishtina
+
+Summary
+Aspiring cloud engineer. Certified but early: 7 months of paid experience, plus
+a home lab I have been running for two years.
+
+Work Experience
+
+Junior Cloud Operations Assistant, Hosting Kosova
+January 2026 - Present
+- Monitor alerts for 40 customer servers and escalate anything I cannot resolve
+- Follow runbooks for routine restarts, certificate renewals and backups
+- Wrote 6 Bash scripts automating repetitive log collection tasks
+- Shadow the senior engineers during planned maintenance windows
+
+Projects
+- Home lab: 3-node Kubernetes cluster on Raspberry Pi, with monitoring
+- Deployed a personal site through a GitHub Actions pipeline to AWS S3
+
+Education
+BSc Computer Science, UBT College, 2022 - 2025
+AWS Certified Cloud Practitioner, 2025
+Certified Kubernetes Application Developer, 2026
+
+Skills
+Technical: Linux, Bash, Docker, basic Kubernetes, AWS, GitHub Actions, Nginx, Git
+Soft: eagerness to learn, reliability, teamwork

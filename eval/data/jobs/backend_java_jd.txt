@@ -1,0 +1,14 @@
+We are looking for a Java Backend Engineer to join our platform team.
+
+Responsibilities:
+- Build and maintain enterprise services using Java and the Spring Boot framework
+- Design domain models and persistence layers with Hibernate and JPA
+- Integrate services through message queues and event streams
+- Participate in code review and maintain unit and integration test coverage
+
+Requirements:
+- Strong professional experience with Java (11 or later)
+- Proficiency with Spring Boot, Spring Data and the wider Spring ecosystem
+- Experience with relational databases and ORM frameworks
+- Familiarity with Maven or Gradle build tooling
+- Working knowledge of JUnit and Mockito

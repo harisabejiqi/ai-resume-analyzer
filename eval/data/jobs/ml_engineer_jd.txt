@@ -1,0 +1,14 @@
+We are hiring a Machine Learning Engineer to take models from research into production.
+
+Responsibilities:
+- Productionise models built by the research team as reliable serving endpoints
+- Build and maintain training and feature pipelines
+- Monitor deployed models for drift, latency and accuracy regressions
+- Automate retraining and rollout with reproducible pipelines
+
+Requirements:
+- Strong Python engineering skills and solid software engineering practice
+- Experience serving machine learning models in production, not only in notebooks
+- Familiarity with containers, orchestration and cloud infrastructure
+- Experience with model monitoring, versioning and experiment tracking
+- Comfortable with MLOps tooling such as MLflow, Airflow or Kubeflow

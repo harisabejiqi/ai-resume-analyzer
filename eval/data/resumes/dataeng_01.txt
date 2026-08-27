@@ -1,0 +1,30 @@
+Kushtrim Bytyqi
+kushtrim.bytyqi@example.com | +383 45 882 401 | Prishtina
+
+Summary
+Data Engineer with 4 years building the pipelines other teams depend on. I move
+and shape data at volume; I do not build models and I do not run the platform.
+
+Work Experience
+
+Data Engineer, Trepça Analytics
+October 2022 - Present
+- Own 40 batch pipelines in Airflow moving 2TB daily into the warehouse
+- Wrote the Spark jobs that transform clickstream events for downstream consumers
+- Modelled the warehouse layer in dbt across 90 tables with tested contracts
+- Cut nightly pipeline runtime from 6h to 100 minutes by repartitioning the heaviest joins
+- Set up data quality checks that catch schema drift before consumers see it
+
+Junior Data Engineer, Trepça Analytics
+March 2021 - September 2022
+- Built ingestion jobs pulling from 12 third-party APIs into staging tables
+- Maintained the Postgres replicas used for reporting
+- Documented the warehouse schema for the analytics team
+
+Education
+BSc Software Engineering, University of Prishtina, 2017 - 2021
+
+Skills
+Technical: Python, SQL, Spark, Airflow, dbt, Kafka, PostgreSQL, Snowflake,
+Docker, Terraform, Git
+Soft: documentation, collaboration, reliability

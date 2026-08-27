@@ -1,0 +1,35 @@
+Donika Krasniqi
+donika.krasniqi@example.com | +383 49 337 812 | Prishtina
+
+Summary
+Registered nurse of 6 years retraining into health data analysis. Currently
+halfway through a part-time MSc; my analytical work so far is coursework and one
+audit project, not paid employment.
+
+Work Experience
+
+Staff Nurse, Regional Hospital Peja
+March 2020 - Present
+- Deliver ward-based care on a 26-bed medical unit
+- Led the clinical audit of medication administration errors across 3 wards,
+  cleaning and analysing 14 months of incident records in Excel and SQL
+- Built the ward's staffing dashboard, now used to plan rotas
+- Mentor student nurses on placement
+
+Healthcare Assistant, Regional Hospital Peja
+June 2018 - February 2020
+- Supported nursing staff with observations and personal care
+
+Projects
+- MSc coursework: predicting readmission risk from an open hospital dataset
+  using logistic regression in Python
+- Self-taught SQL through an online course, applied to the audit above
+
+Education
+MSc Health Data Science (part-time, in progress), University of Prishtina, 2025 - expected 2027
+BSc Nursing, University of Prishtina, 2014 - 2018
+
+Skills
+Technical: Excel, SQL, basic Python, pandas, descriptive statistics, clinical
+audit, patient care, electronic patient records
+Soft: analytical thinking, communication, empathy, teamwork

@@ -1,0 +1,29 @@
+Elira Berisha
+elira.berisha@example.com | +383 45 771 302 | Prishtina
+
+Summary
+Junior Backend Developer with 1 year of professional experience writing Python
+web services. Looking to deepen my backend engineering practice on a team with
+strong code review culture.
+
+Work Experience
+
+Junior Backend Developer, Nexa Web Studio
+September 2025 - Present
+- Implemented REST API endpoints in Django for a client booking platform
+- Wrote SQL queries and migrations against a PostgreSQL database
+- Fixed 25 bugs reported by QA during the platform's first release cycle
+- Added unit tests with pytest for the payments module
+
+Intern, Nexa Web Studio
+June 2025 - August 2025
+- Built an internal admin page for managing customer records
+- Documented the setup process for the local development environment
+
+Education
+BSc Computer Engineering, UBT College, 2021 - 2025
+Final project: a Flask API for a university course registration system
+
+Skills
+Technical: Python, Django, Flask, PostgreSQL, SQL, REST APIs, pytest, Git, Docker
+Soft: teamwork, communication, willingness to learn

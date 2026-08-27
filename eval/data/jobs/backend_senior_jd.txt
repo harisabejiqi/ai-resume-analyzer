@@ -1,0 +1,15 @@
+We are seeking a Senior Backend Engineer to take technical ownership of our core services.
+
+Responsibilities:
+- Own the architecture of a major service domain end to end
+- Lead the technical direction of a team and mentor engineers
+- Drive migrations of legacy systems toward a distributed architecture
+- Set standards for reliability, observability and on-call practice
+- Represent engineering in planning with product stakeholders
+
+Requirements:
+- 7+ years of professional server-side development experience
+- Demonstrated ownership of system architecture at scale
+- Track record of mentoring or leading other engineers
+- Deep experience with distributed systems and asynchronous messaging
+- Strong communication skills with technical and non-technical audiences

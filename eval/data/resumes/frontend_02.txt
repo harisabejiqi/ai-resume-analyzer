@@ -1,0 +1,32 @@
+Rina Hoxha
+rina.hoxha@example.com | +383 44 615 703 | Prishtina
+
+Summary
+Frontend Developer with 5 years building browser applications, mainly in the
+Angular and Vue ecosystems. Particular interest in accessibility and design
+systems.
+
+Work Experience
+
+Frontend Developer, Studio Kodra
+April 2022 - Present
+- Rebuilt the customer portal in Angular 16, serving 25,000 monthly users
+- Built and documented a shared component library of 45 components used by 3 teams
+- Brought the portal to WCAG 2.1 AA compliance, fixing 60 accessibility defects
+- Cut initial bundle size by 42% through lazy loading and dependency pruning
+- Set up visual regression testing with Playwright across 30 key screens
+
+Web Developer, Kreativ Agency
+February 2021 - March 2022
+- Developed 14 client websites in Vue 3 with responsive layouts
+- Integrated content management APIs and third-party payment widgets
+- Collaborated with designers in Figma to translate mockups into components
+
+Education
+BA Graphic Design, University of Prishtina, 2016 - 2020
+Frontend Development Certificate, freeCodeCamp, 2020
+
+Skills
+Technical: Angular, Vue, TypeScript, JavaScript, HTML, CSS, SCSS, RxJS,
+Playwright, Webpack, Vite, Figma, Git
+Soft: collaboration, attention to detail, communication

@@ -1,0 +1,31 @@
+Anda Krasniqi
+anda.krasniqi@example.com | +383 44 462 730 | Prishtina
+
+Summary
+UI designer of 6 years, moving toward front-end implementation. I build the
+interfaces I design, though my code is not yet at production standard on complex
+state.
+
+Work Experience
+
+Senior UI Designer, Studio Vega
+March 2021 - Present
+- Design interfaces for 20+ web and mobile products a year
+- Built and maintain the design system in Figma, 120 components
+- Hand-code marketing pages in HTML and CSS, 30 pages shipped
+- Write small amounts of JavaScript for interactive prototypes
+- Run usability sessions with 8-10 participants per project
+
+UI Designer, Agjencia Format
+July 2019 - February 2021
+- Produced wireframes and high-fidelity mockups for client websites
+- Collaborated closely with developers during handover and QA
+
+Education
+BA Graphic Design, University of Prishtina, 2015 - 2019
+Interaction Design Foundation certificate, 2022
+
+Skills
+Technical: Figma, Adobe XD, HTML, CSS, SCSS, basic JavaScript, accessibility
+basics, design systems, prototyping, usability testing
+Soft: visual thinking, collaboration, empathy, presenting

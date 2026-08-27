@@ -1,0 +1,27 @@
+Fatmir Gashi
+fatmir.gashi@example.com | +383 45 330 219 | Prishtina
+
+Summary
+Data Analyst with 4 years turning business questions into dashboards and reports.
+Strong in SQL and reporting tools; no production engineering background.
+
+Work Experience
+
+Data Analyst, Albi Retail Group
+May 2022 - Present
+- Built 22 Power BI dashboards used weekly by the commercial and finance teams
+- Wrote the SQL models behind the sales reporting layer across 15 source tables
+- Automated a monthly reporting pack that previously took 3 days of manual work
+- Ran the pricing analysis that informed a 4% margin improvement on 200 SKUs
+
+Junior Analyst, Albi Retail Group
+September 2021 - April 2022
+- Produced weekly stock and sales reports in Excel for 12 store managers
+- Cleaned and consolidated supplier data from 6 inconsistent sources
+
+Education
+BSc Business Informatics, UBT College, 2017 - 2021
+
+Skills
+Technical: SQL, Power BI, Tableau, Excel, Google Sheets, basic Python, pandas
+Soft: communication, attention to detail, stakeholder reporting

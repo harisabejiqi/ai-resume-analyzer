@@ -1,0 +1,37 @@
+Agron Selimi
+agron.selimi@example.com | +383 44 100 962 | Prishtina
+
+Summary
+Principal Engineer, 14 years. I spend most of my time on architecture, technical
+strategy and growing other engineers rather than writing day-to-day feature code.
+
+Work Experience
+
+Principal Engineer, Adriatik Payments
+January 2020 - Present
+- Set the technical direction for a payments platform processing 40M EUR monthly
+- Designed the event-sourced ledger that replaced 3 legacy reconciliation systems
+- Chair the architecture review board; approved 120 design documents
+- Grew 6 engineers to senior level through structured mentoring
+- Defined the reliability standards and on-call practice adopted across 9 teams
+- Represent engineering with regulators and enterprise customers
+
+Engineering Lead, Adriatik Payments
+June 2016 - December 2019
+- Led a team of 8 through the migration from a monolith to distributed services
+- Owned the settlement domain end to end, from schema to production support
+- Introduced asynchronous messaging with Kafka across 20 services
+
+Senior Developer, Illyria Systems
+September 2011 - May 2016
+- Built server-side systems in Go and Python for telecoms billing
+- Ran the on-call rota and led incident reviews
+
+Education
+MSc Computer Science, University of Prishtina, 2009 - 2011
+BSc Computer Science, University of Prishtina, 2006 - 2009
+
+Skills
+Technical: Go, Python, Kafka, PostgreSQL, event sourcing, distributed systems,
+domain-driven design, Kubernetes, AWS, Terraform
+Soft: technical leadership, mentoring, architecture, stakeholder communication

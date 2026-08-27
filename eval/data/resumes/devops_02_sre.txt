@@ -1,0 +1,32 @@
+Endrit Bajrami
+endrit.bajrami@example.com | +383 49 442 108 | Prishtina
+
+Summary
+Site Reliability Engineer with 6 years keeping distributed systems available.
+Focus on observability, incident response and infrastructure as code.
+
+Work Experience
+
+Site Reliability Engineer, Balkan Cloud Services
+November 2021 - Present
+- Own the observability stack (Prometheus, Grafana, Loki) covering 80 services
+- Reduced mean time to recovery from 47 minutes to 12 through better alerting and runbooks
+- Led 30+ production incident responses as incident commander
+- Defined SLOs and error budgets for 15 customer-facing services
+- Migrated infrastructure to Terraform, replacing 4,000 lines of manual setup scripts
+- Built the GPU autoscaling setup used by the machine learning platform team
+
+Systems Engineer, Telekomi Rajonal
+March 2019 - October 2021
+- Maintained 120 Linux servers and automated patching with Ansible
+- Built the Jenkins pipelines used by 6 development teams
+- Cut cloud spend 22% by rightsizing instances and scheduling non-production shutdowns
+
+Education
+BSc Computer Engineering, University of Prishtina, 2014 - 2018
+Certified Kubernetes Administrator, 2021
+
+Skills
+Technical: Kubernetes, Docker, Terraform, Ansible, Prometheus, Grafana, Loki,
+AWS, GCP, Linux, Bash, Python, Jenkins, GitLab CI
+Soft: incident leadership, communication, documentation

@@ -1,0 +1,12 @@
+Ardian Hoxha
+ardian.hoxha@example.com | (555) 204-1183
+
+EXPERIENCE
+Senior Software Engineer at DataCorp (2018 - 2025)
+Built scalable web services using Python, Flask and PostgreSQL.
+
+EDUCATION
+Bachelor of Science in Computer Science, University of Prishtina, 2018
+
+SKILLS
+Python, Flask, PostgreSQL, SQL, Docker, AWS, REST APIs, Git

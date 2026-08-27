@@ -1,0 +1,41 @@
+Driton Shala
+driton.shala@example.com | +383 44 902 517 | Prishtina
+
+Summary
+Server-side engineer with 7 years spent building the machinery behind
+high-traffic consumer products. I specialise in breaking large single-codebase
+systems into independently releasable units and in making persistent storage
+behave predictably under load.
+
+Work Experience
+
+Lead Platform Engineer, Vala Commerce
+January 2022 - Present
+- Split a single deployable shop system into 11 independently shippable units,
+  each owning its own schema and released on its own cadence
+- Designed the request-handling layer that serves 3.2M product lookups per day
+- Introduced Kafka as the backbone for asynchronous communication between units,
+  removing 14 direct synchronous calls between subsystems
+- Tuned Postgres indexes and rewrote the 8 slowest read paths, taking the 95th
+  percentile response time from 850ms to 190ms
+- Automated the release pipeline so merged changes reach production unattended,
+  cutting release effort from a half-day ritual to under 10 minutes
+- Packaged every unit as an immutable image and ran them under Kubernetes on
+  Google Cloud, with automated rollback on failed health probes
+- Mentored 5 engineers and ran the weekly design review
+
+Senior Engineer, Trepça Digital
+June 2019 - December 2021
+- Wrote the Django backend for a subscription product with 60,000 active accounts
+- Modelled billing data across 40 tables and owned all schema migrations
+- Built the internal HTTP interface that the mobile clients consume
+- Reduced infrastructure spend 28% by right-sizing compute and caching hot reads
+  in Redis
+
+Education
+BSc Computer Science, University of Prishtina, 2015 - 2019
+
+Skills
+Technical: Django, Kafka, Postgres, Redis, Kubernetes, Google Cloud, Celery,
+Nginx, Terraform, Git, pytest
+Soft: mentoring, technical leadership, design review, communication

@@ -1,0 +1,32 @@
+Dr. Vjosa Ademi
+vjosa.ademi@example.com | +383 49 604 288 | Prishtina
+
+Summary
+Researcher in representation learning with 7 years in academia. Four peer-reviewed
+publications. My work stops at the experimental result; I have not deployed a
+model to serve live traffic.
+
+Work Experience
+
+Postdoctoral Researcher, University of Prishtina
+October 2023 - Present
+- Lead a research strand on self-supervised representation learning for low-resource languages
+- Published 2 papers at peer-reviewed venues, 31 citations to date
+- Supervise 4 master's students through their thesis experiments
+- Secured a 40,000 EUR national research grant as principal investigator
+
+Doctoral Researcher, University of Vienna
+September 2019 - August 2023
+- Trained transformer architectures on a 200GB corpus using a university GPU cluster
+- Ran 800+ controlled experiments and reported ablations across 6 model variants
+- Reviewed 22 submissions for two workshops
+- Taught the graduate statistics tutorial for 3 cohorts
+
+Education
+PhD Computer Science, University of Vienna, 2019 - 2023
+MSc Mathematics, University of Prishtina, 2017 - 2019
+
+Skills
+Technical: PyTorch, JAX, NumPy, pandas, scikit-learn, LaTeX, SLURM, statistics,
+experimental design, Python
+Soft: academic writing, presenting, supervision, critical analysis

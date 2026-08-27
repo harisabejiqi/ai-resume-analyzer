@@ -1,0 +1,32 @@
+Arben Krasniqi
+arben.krasniqi@example.com | +383 44 210 884 | Prishtina
+
+Summary
+Java Backend Engineer with 4 years of experience building enterprise services
+for logistics and payments platforms. Comfortable owning a service from domain
+model through to production deployment.
+
+Work Experience
+
+Backend Engineer, Kosmos Logistics
+March 2023 - Present
+- Built 6 Spring Boot services handling shipment tracking for 40,000 daily consignments
+- Modelled the persistence layer with Hibernate and JPA across 30 entity types
+- Integrated services over RabbitMQ, cutting order-processing latency from 9s to 2s
+- Raised integration test coverage from 34% to 81% using JUnit and Mockito
+- Mentored 2 junior engineers through their first production releases
+
+Java Developer, Fintrek Solutions
+July 2021 - February 2023
+- Developed payment reconciliation services in Java 11 with Spring Data
+- Migrated the build from Maven to Gradle, reducing CI build time by 35%
+- Wrote the batch job that reconciles 1.2M monthly transactions against bank statements
+- Resolved 40+ production defects in a legacy billing module
+
+Education
+BSc Computer Science, University of Prishtina, 2017 - 2021
+
+Skills
+Technical: Java, Spring Boot, Spring Data, Hibernate, JPA, PostgreSQL, MySQL,
+RabbitMQ, Maven, Gradle, JUnit, Mockito, Git, Jenkins
+Soft: mentoring, communication, teamwork

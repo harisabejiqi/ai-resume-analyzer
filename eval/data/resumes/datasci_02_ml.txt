@@ -1,0 +1,32 @@
+Blerta Musliu
+blerta.musliu@example.com | +383 49 118 640 | Prishtina
+
+Summary
+Machine Learning Engineer with 5 years of experience taking models out of
+notebooks and into production systems that stay healthy under real traffic.
+
+Work Experience
+
+Machine Learning Engineer, Gjurma AI
+February 2023 - Present
+- Deployed 9 models to production as serving endpoints handling 400 requests/second
+- Built the feature pipeline in Airflow that feeds 3 recommendation models daily
+- Added drift monitoring that caught a 12% accuracy regression within 48 hours
+- Automated retraining and staged rollout, reducing model release time from 2 weeks to 2 days
+- Tracked 300+ experiments in MLflow and standardised model versioning across 4 teams
+
+Data Scientist, Kosova Insights
+August 2020 - January 2023
+- Trained churn models in scikit-learn reaching 0.83 AUC on held-out data
+- Built forecasting models for weekly demand across 60 retail locations
+- Packaged model inference in Docker containers for the engineering team to deploy
+- Presented findings to non-technical stakeholders in monthly business reviews
+
+Education
+MSc Data Science, University of Prishtina, 2018 - 2020
+BSc Mathematics, University of Prishtina, 2015 - 2018
+
+Skills
+Technical: Python, scikit-learn, PyTorch, TensorFlow, MLflow, Airflow, Kubeflow,
+Docker, Kubernetes, AWS, SQL, pandas, NumPy, Git
+Soft: communication, collaboration, presenting to stakeholders

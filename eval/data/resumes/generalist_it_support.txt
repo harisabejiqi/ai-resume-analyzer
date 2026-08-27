@@ -1,0 +1,30 @@
+Ilir Nikçi
+ilir.nikci@example.com | +383 44 776 013 | Prishtina
+
+Summary
+IT Support Technician with 4 years keeping offices running. First line for
+hardware, accounts and anything that stops working.
+
+Work Experience
+
+IT Support Technician, Grupi Ballkan
+February 2022 - Present
+- First point of contact for 180 staff across 3 offices
+- Resolve around 60 tickets a week covering laptops, printers and access requests
+- Manage user accounts and permissions in Microsoft 365 and Active Directory
+- Set up and image new machines; maintain the hardware inventory of 240 devices
+- Wrote the onboarding checklist now used for every new starter
+
+IT Assistant, Shkolla Teknike
+September 2020 - January 2022
+- Maintained 4 computer labs and 90 workstations
+- Supported teachers with projectors, network issues and software installs
+
+Education
+Diploma in Information Technology, UBT College, 2017 - 2020
+CompTIA A+ certification, 2021
+
+Skills
+Technical: Windows, Microsoft 365, Active Directory, basic networking, TCP/IP,
+hardware troubleshooting, ticketing systems, Bash basics
+Soft: patience, communication, problem solving, customer service
