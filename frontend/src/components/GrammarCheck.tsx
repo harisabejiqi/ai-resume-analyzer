@@ -63,7 +63,7 @@ export default function GrammarCheck({ grammar }: Props) {
           <li key={i} className="text-sm text-surface-900">
             <div className="flex flex-wrap items-center gap-2">
               <span className="rounded bg-surface-50 px-1.5 py-0.5 font-mono text-xs text-surface-900 line-through">
-                {it.text || "—"}
+                {it.text || "-"}
               </span>
               {it.suggestions.length > 0 && (
                 <>

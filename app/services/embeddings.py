@@ -5,7 +5,7 @@ lexical matching (TF-IDF counts shared words), we encode the resume and the job
 description into dense vectors produced by a pretrained transformer model
 (all-MiniLM-L6-v2, a distilled BERT-family sentence encoder). Cosine similarity
 between those vectors captures *meaning*, so phrasing like "built REST APIs"
-matches a job asking for "developed web services" even with no shared keywords —
+matches a job asking for "developed web services" even with no shared keywords,
 something TF-IDF scores as zero.
 
 The model (~90 MB) is downloaded on first use and cached locally by the

@@ -7,7 +7,7 @@ suggested corrections.
 Resumes are noisy input for a general grammar checker: bullets are intentional
 fragments, and they are full of proper nouns and technology names (ClickHouse,
 GraphQL, SQL, VAST). So we keep only the issue types that genuinely matter on a
-resume — spelling and grammar — and additionally drop "misspellings" that look
+resume (spelling and grammar) and additionally drop "misspellings" that look
 like technical identifiers, which are almost always false positives.
 """
 

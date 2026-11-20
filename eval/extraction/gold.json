@@ -1,5 +1,5 @@
 {
-  "_about": "Hand-labeled ground truth for the information-extraction evaluation. One entry per resume in eval/extraction/resumes/. 'phone' is the national significant number (digits only, no country code); the harness matches on a digit-suffix so the extractor's +CC international form still counts as correct. 'skills_technical' lists the software-skill vocabulary tokens a human judges to be genuinely indicated by the resume (including ones the keyword matcher cannot know, e.g. 'tableau', 'c#' — these are real recall misses). 'name'/'email' null means the field is genuinely absent.",
+  "_about": "Hand-labeled ground truth for the information-extraction evaluation. One entry per resume in eval/extraction/resumes/. 'phone' is the national significant number (digits only, no country code); the harness matches on a digit-suffix so the extractor's +CC international form still counts as correct. 'skills_technical' lists the software-skill vocabulary tokens a human judges to be genuinely indicated by the resume (including ones the keyword matcher cannot know, e.g. 'tableau', 'c#'; these are real recall misses). 'name'/'email' null means the field is genuinely absent.",
   "besnik_krasniqi.txt": {
     "name": "Besnik Krasniqi",
     "email": "besnik.krasniqi@gmail.com",

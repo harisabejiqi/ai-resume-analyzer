@@ -39,7 +39,7 @@ _JD_HEADER = re.compile(
 )
 _CONTACT = re.compile(r"[\w.+-]+@[\w-]+\.\w+|\+?\d[\d\s()-]{7,}")
 _DATE_LINE = re.compile(
-    r"^\s*\w+\.?\s*\d{4}\s*[-–—]\s*(present|current|ongoing|\w+\.?\s*\d{4})\s*$",
+    r"^\s*\w+\.?\s*\d{4}\s*[-–\u2014]\s*(present|current|ongoing|\w+\.?\s*\d{4})\s*$",
     re.IGNORECASE,
 )
 _ROLE_LINE = re.compile(

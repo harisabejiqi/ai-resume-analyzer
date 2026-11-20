@@ -1,4 +1,4 @@
-# Archived runs — the label-quality comparison
+# Archived runs: the label-quality comparison
 
 These two runs exist to support one finding: **tightening the grade-1 definition
 changed the conclusions more than any algorithmic change tested.**

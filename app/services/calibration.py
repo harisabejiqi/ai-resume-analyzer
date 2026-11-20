@@ -10,7 +10,7 @@ This module applies a fitted **logistic (Platt-style) mapping** that stretches
 the score onto an interpretable 0-100 scale where unrelated pairs sit near 0
 and strong matches near 100. The mapping is *strictly monotonic*, so it leaves
 the ranking of any set of candidates unchanged (Spearman / NDCG / MRR are
-invariant) — it only changes the absolute, human-facing number.
+invariant); it only changes the absolute, human-facing number.
 
 Parameters are fit offline against the labeled gold set by `eval/calibrate.py`
 and stored in `calibration_params.json`. If that file is absent or unreadable,
@@ -69,7 +69,7 @@ def calibrate(score_0_100):
     """Map a raw semantic score (0-100) to a calibrated score (0-100).
 
     Identity when no parameters are loaded. The transform is monotonic, so it
-    never reorders candidates — see the module docstring.
+    never reorders candidates (see the module docstring).
     """
     p = _params
     method = p.get("method")

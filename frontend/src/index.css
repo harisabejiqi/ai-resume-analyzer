@@ -3,10 +3,10 @@
 /* Enable class-based dark mode: the `dark:` variant applies whenever an
  * ancestor (or the element itself) carries the `dark` class. We toggle that
  * class on <html>. Most of the UI flips automatically because the surface
- * tokens are redefined under `.dark` below — utilities resolve to CSS vars. */
+ * tokens are redefined under `.dark` below, so utilities resolve to CSS vars. */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Design tokens — overrides Tailwind defaults to give the app its own palette,
+/* Design tokens: overrides Tailwind defaults to give the app its own palette,
  * type scale, and radius rhythm. Modify these to re-theme the whole app. */
 @theme {
   /* Brand palette: deep violet for primary, slate-zinc for surfaces.
@@ -54,11 +54,11 @@
   --radius-2xl: 28px;
 }
 
-/* Dark theme — we only re-map the *surface* scale. The semantic meaning of each
+/* Dark theme: we only re-map the *surface* scale. The semantic meaning of each
  * step inverts (surface-0 becomes the darkest card, surface-900 the lightest
  * text), so every `bg-surface-*` / `text-surface-*` / `border-surface-*` utility
  * flips with zero component changes. The brand and pastel semantic palettes stay
- * as-is — vivid violet buttons and light-tinted chips read well on dark. */
+ * as-is; vivid violet buttons and light-tinted chips read well on dark. */
 .dark {
   --color-surface-0: oklch(0.21 0.012 286);
   --color-surface-50: oklch(0.17 0.012 286);
