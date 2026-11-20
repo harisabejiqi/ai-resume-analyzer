@@ -4,6 +4,7 @@ import {
   getHistory,
   removeHistory,
   clearHistory,
+  isLegacy,
   type HistoryEntry,
 } from "../lib/history";
 import Card from "./ui/Card";
@@ -49,6 +50,12 @@ function MiniRing({ score }: { score: number }) {
       </span>
     </div>
   );
+}
+
+function matchLabel(entry: HistoryEntry) {
+  if (!entry.hasJobDescription) return "No job desc.";
+  if (entry.jobMatchScore == null) return "Job desc. too short";
+  return `${Math.round(entry.jobMatchScore)}% job match`;
 }
 
 function formatDate(ms: number) {
@@ -120,7 +127,7 @@ export default function HistoryDashboard() {
             No analyses yet
           </h2>
           <p className="mt-1 max-w-sm text-sm text-surface-700">
-            Upload a resume to get a score and a breakdown. Each result is saved
+            Upload a resume to get a CV quality score and a breakdown. Each result is saved
             here so you can compare over time.
           </p>
           <Link to="/" className="mt-5">
@@ -129,67 +136,83 @@ export default function HistoryDashboard() {
         </Card>
       ) : (
         <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {entries.map((entry) => (
-            <li key={entry.id}>
-              <Card className="flex h-full flex-col gap-4 p-5">
-                <div className="flex items-start gap-4">
-                  <MiniRing score={entry.totalScore} />
-                  <div className="min-w-0 flex-1">
-                    <div
-                      className="truncate text-sm font-medium text-surface-900"
-                      title={entry.fileName}
-                    >
-                      {entry.fileName}
-                    </div>
-                    <div className="mt-0.5 text-xs text-surface-700">
-                      {formatDate(entry.createdAt)}
-                    </div>
-                    <div className="mt-2 flex flex-wrap gap-1.5 text-xs text-surface-700">
-                      <span className="rounded-full bg-surface-100 px-2 py-0.5 ring-1 ring-surface-200">
-                        {entry.data.analysis.skills.technical.length} skills
-                      </span>
-                      <span className="rounded-full bg-surface-100 px-2 py-0.5 ring-1 ring-surface-200">
-                        {entry.hasJobDescription
-                          ? `${entry.data.score.match_score}% match`
-                          : "No job desc."}
-                      </span>
+          {entries.map((entry) => {
+            const legacy = isLegacy(entry);
+            return (
+              <li key={entry.id}>
+                <Card className="flex h-full flex-col gap-4 p-5">
+                  <div className="flex items-start gap-4">
+                    {legacy ? (
+                      <div className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-surface-100 text-[10px] font-medium uppercase tracking-wide text-surface-700 ring-1 ring-surface-200">
+                        Old
+                      </div>
+                    ) : (
+                      <MiniRing score={entry.cvScore ?? 0} />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <div
+                        className="truncate text-sm font-medium text-surface-900"
+                        title={entry.fileName}
+                      >
+                        {entry.fileName}
+                      </div>
+                      <div className="mt-0.5 text-xs text-surface-700">
+                        {formatDate(entry.createdAt)}
+                      </div>
+                      <div className="mt-2 flex flex-wrap gap-1.5 text-xs text-surface-700">
+                        {legacy ? (
+                          <span className="rounded-full bg-warning-100 px-2 py-0.5 text-warning-500 ring-1 ring-warning-500/30">
+                            Old format: upload again to view
+                          </span>
+                        ) : (
+                          <>
+                            <span className="rounded-full bg-surface-100 px-2 py-0.5 ring-1 ring-surface-200">
+                              CV quality {Math.round(entry.cvScore ?? 0)}
+                            </span>
+                            <span className="rounded-full bg-surface-100 px-2 py-0.5 ring-1 ring-surface-200">
+                              {matchLabel(entry)}
+                            </span>
+                          </>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="mt-auto flex items-center justify-between gap-2">
-                  <Button
-                    size="md"
-                    className="flex-1"
-                    onClick={() =>
-                      navigate("/results", { state: entry.data })
-                    }
-                  >
-                    View
-                  </Button>
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(entry.id)}
-                    aria-label={`Delete analysis of ${entry.fileName}`}
-                    className="grid h-10 w-10 shrink-0 place-items-center rounded-lg text-surface-700 ring-1 ring-surface-200 transition-colors hover:bg-danger-100 hover:text-danger-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger-500"
-                  >
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="h-4 w-4"
+                  <div className="mt-auto flex items-center justify-between gap-2">
+                    <Button
+                      size="md"
+                      className="flex-1"
+                      disabled={legacy}
+                      onClick={() =>
+                        navigate("/results", { state: entry.data })
+                      }
                     >
-                      <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-                      <path d="M10 11v6M14 11v6" />
-                    </svg>
-                  </button>
-                </div>
-              </Card>
-            </li>
-          ))}
+                      View
+                    </Button>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(entry.id)}
+                      aria-label={`Delete analysis of ${entry.fileName}`}
+                      className="grid h-10 w-10 shrink-0 place-items-center rounded-lg text-surface-700 ring-1 ring-surface-200 transition-colors hover:bg-danger-100 hover:text-danger-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger-500"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="h-4 w-4"
+                      >
+                        <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                        <path d="M10 11v6M14 11v6" />
+                      </svg>
+                    </button>
+                  </div>
+                </Card>
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>

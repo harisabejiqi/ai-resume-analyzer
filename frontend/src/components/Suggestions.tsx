@@ -2,9 +2,10 @@ import Card from "./ui/Card";
 
 interface Props {
   suggestions: string[];
+  title?: string;
 }
 
-export default function Suggestions({ suggestions }: Props) {
+export default function Suggestions({ suggestions, title = "Improvement suggestions" }: Props) {
   return (
     <Card accent="info">
       <div className="flex items-center gap-2">
@@ -21,7 +22,7 @@ export default function Suggestions({ suggestions }: Props) {
           <path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.6 1 1.5 1 2.3v1h6v-1c0-.8.4-1.7 1-2.3A7 7 0 0 0 12 2z" />
         </svg>
         <h2 className="text-sm font-medium uppercase tracking-wide text-surface-700">
-          Improvement suggestions
+          {title}
         </h2>
       </div>
       <ul className="mt-4 space-y-2.5">

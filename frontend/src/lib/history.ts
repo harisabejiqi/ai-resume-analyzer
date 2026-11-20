@@ -4,9 +4,15 @@ export interface HistoryEntry {
   id: string;
   createdAt: number;
   fileName: string;
-  totalScore: number;
+  cvScore?: number;
+  jobMatchScore?: number | null;
+  totalScore?: number;
   hasJobDescription: boolean;
   data: AnalyzeResponse;
+}
+
+export function isLegacy(entry: HistoryEntry): boolean {
+  return !entry.data || !(entry.data as Partial<AnalyzeResponse>).cv_quality;
 }
 
 const STORAGE_KEY = "resume-analyses";
@@ -50,8 +56,9 @@ export function addHistory(
     id: newId(),
     createdAt: Date.now(),
     fileName,
-    totalScore: data.score.total_score,
-    hasJobDescription: data.score.has_job_description,
+    cvScore: data.cv_quality.score,
+    jobMatchScore: data.job_match ? data.job_match.score : null,
+    hasJobDescription: data.job_match !== null,
     data,
   };
   const next = [entry, ...getHistory()].slice(0, MAX_ENTRIES);

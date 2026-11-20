@@ -22,22 +22,6 @@ export interface Analysis {
   word_count: number;
 }
 
-export interface ScoreBreakdown {
-  skills: number;
-  education: number;
-  experience: number;
-  relevance?: number;
-}
-
-export interface Score {
-  total_score: number;
-  match_score: number;
-  has_job_description: boolean;
-  missing_keywords: string[];
-  suggestions: string[];
-  breakdown: ScoreBreakdown;
-}
-
 export interface SkillMatch {
   matched: string[];
   missing: string[];
@@ -52,7 +36,6 @@ export interface JobDescription {
   experience_required: number | null;
   education_required: string[];
   qualifications: string[];
-  skill_match: SkillMatch;
 }
 
 export interface GrammarIssue {
@@ -69,9 +52,66 @@ export interface Grammar {
   issues: GrammarIssue[];
 }
 
+export type CvPart = "experience" | "skills" | "contact" | "language" | "education" | "length";
+
+export interface CvStatistics {
+  word_count: number;
+  line_count: number;
+  sections: string[];
+  roles: number;
+  bullet_count: number;
+  avg_bullets_per_role: number;
+  avg_words_per_bullet: number;
+  quantified_bullets_pct: number;
+  action_verb_bullets_pct: number;
+  technical_skills: number;
+  soft_skills: number;
+  education_entries: number;
+  experience_years: number;
+}
+
+export interface ReadabilityCheck {
+  id: string;
+  label: string;
+  passed: boolean;
+  detail: string;
+}
+
+export interface CvQuality {
+  score: number;
+  breakdown: Partial<Record<CvPart, { score: number; weight: number }>>;
+  statistics: CvStatistics;
+  summary: { sentences: string[]; method: "sbert_centroid" | "fallback" };
+  checks: ReadabilityCheck[];
+  suggestions: string[];
+}
+
+export interface Evidence {
+  requirement: string;
+  best_chunk: string;
+  score: number;
+}
+
+export interface JobMatch {
+  score: number | null;
+  reliability: "normal" | "low" | "insufficient";
+  reliability_note: string | null;
+  requirement_count: number;
+  evidence: Evidence[];
+  skill_match: SkillMatch;
+  missing_keywords: string[];
+  requirements_check: {
+    experience: { required: number | null; candidate: number; met: boolean | null };
+    education: { required: string[]; resume_has_education: boolean };
+  };
+  suggestions: string[];
+  disclaimer: string;
+}
+
 export interface AnalyzeResponse {
   analysis: Analysis;
-  score: Score;
+  grammar: Grammar;
+  cv_quality: CvQuality;
   job_description: JobDescription | null;
-  grammar?: Grammar;
+  job_match: JobMatch | null;
 }

@@ -27,8 +27,8 @@ export default function UploadForm() {
   const accept = (f: File | null | undefined) => {
     if (!f) return;
     const ext = f.name.toLowerCase().split(".").pop();
-    if (ext !== "pdf" && ext !== "docx" && ext !== "doc") {
-      setError("Only PDF, DOC, and DOCX files are supported.");
+    if (ext !== "pdf" && ext !== "docx") {
+      setError("Only PDF and DOCX files are supported.");
       return;
     }
     if (f.size > MAX_BYTES) {
@@ -93,7 +93,7 @@ export default function UploadForm() {
           Score your resume in seconds.
         </h1>
         <p className="mt-3 text-base text-surface-700">
-          Upload your CV — optionally paste a job description — and get a
+          Upload your CV, optionally paste a job description, and get a
           breakdown of skills, gaps, and what to improve.
         </p>
       </div>
@@ -148,7 +148,7 @@ export default function UploadForm() {
               <input
                 ref={inputRef}
                 type="file"
-                accept=".pdf,.docx,.doc"
+                accept=".pdf,.docx"
                 className="hidden"
                 onChange={(e) => accept(e.target.files?.[0])}
               />
@@ -204,7 +204,7 @@ export default function UploadForm() {
                     <span className="text-brand-600">browse</span>
                   </div>
                   <div className="mt-1 text-xs text-surface-700">
-                    PDF, DOC, or DOCX · up to 16 MB
+                    PDF or DOCX · up to 16 MB
                   </div>
                 </>
               )}
@@ -218,7 +218,7 @@ export default function UploadForm() {
             >
               <span>Job description</span>
               <span className="text-xs font-normal text-surface-700">
-                Optional — improves match scoring
+                Optional: improves match scoring
               </span>
             </label>
             <textarea

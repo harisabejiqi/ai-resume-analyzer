@@ -1,8 +1,9 @@
-import type { JobDescription } from "../types";
+import type { JobDescription, SkillMatch } from "../types";
 import Card from "./ui/Card";
 
 interface Props {
   jd: JobDescription;
+  skillMatch: SkillMatch;
   candidateYears: number;
 }
 
@@ -44,9 +45,8 @@ function SkillChip({ label, present }: { label: string; present: boolean }) {
   );
 }
 
-export default function JobRequirements({ jd, candidateYears }: Props) {
-  const { skill_match, experience_required, education_required, qualifications } =
-    jd;
+export default function JobRequirements({ jd, skillMatch: skill_match, candidateYears }: Props) {
+  const { experience_required, education_required, qualifications } = jd;
   const totalRequired = skill_match.matched.length + skill_match.missing.length;
   const coverage = skill_match.coverage;
   const meetsExperience =
@@ -76,7 +76,7 @@ export default function JobRequirements({ jd, candidateYears }: Props) {
         {coverage != null && (
           <span className="rounded-full bg-brand-100 px-2.5 py-1 text-xs font-medium text-brand-700">
             {skill_match.matched.length}/{totalRequired} required skills ·{" "}
-            {Math.round(coverage)}% match
+            {Math.round(coverage)}% covered
           </span>
         )}
       </div>
