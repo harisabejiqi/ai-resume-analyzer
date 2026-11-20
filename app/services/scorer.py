@@ -6,6 +6,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 from . import calibration, chunking
 from .analyzer import SOFT_SKILLS, TECH_SKILLS
+from .jd_parser import match_required_skills
 
 
 STOPWORDS = set(
@@ -239,20 +240,20 @@ def _unevidenced_skills(analysis, matched_skills):
     return [s for s in matched_skills if not _is_present(s.lower(), bullets)]
 
 
-def generate_suggestions(analysis, match_score, missing_keywords, has_jd, exp_stats,
-                         skill_match=None):
-    """Build prioritized, content-specific improvement suggestions.
+MAX_SUGGESTIONS = 6
+STRONG_RESUME = ("Strong resume: it covers contact details, skills, education and "
+                 "quantified experience.")
 
-    Rather than emitting fixed sentences, each suggestion references what *this*
-    resume actually contains — named roles, real weak bullets, the actual missing
-    keywords, concrete counts — so two different resumes produce different advice.
-    Suggestions are appended most-impactful-first and capped, so the user sees
-    the few changes that matter rather than a generic checklist.
+
+def generate_job_suggestions(analysis, match_score, missing_keywords, skill_match=None):
+    """Suggestions about fit to one posting (Mode 2), most-impactful-first.
+
+    `match_score` may be None when the posting is too short to score; the
+    score-based advice is then skipped and only the keyword advice remains.
     """
     suggestions = []
-    work_experience = analysis.get("work_experience", [])
 
-    if has_jd:
+    if match_score is not None:
         coverage = (skill_match or {}).get("coverage")
         unevidenced = (
             _unevidenced_skills(analysis, (skill_match or {}).get("matched") or [])
@@ -278,13 +279,22 @@ def generate_suggestions(analysis, match_score, missing_keywords, has_jd, exp_st
                 "terminology where you genuinely have the experience."
             )
 
-        if missing_keywords:
-            top = missing_keywords[:6]
-            shown = ", ".join(top)
-            suggestions.append(
-                f"The posting stresses {shown} — none of which appear in your resume. "
-                "Add the ones you have real experience with, in context (not a keyword list)."
-            )
+    if missing_keywords:
+        top = missing_keywords[:6]
+        shown = ", ".join(top)
+        suggestions.append(
+            f"The posting stresses {shown}, none of which appear in your resume. "
+            "Add the ones you have real experience with, in context (not a keyword list)."
+        )
+
+    return suggestions
+
+
+def generate_general_suggestions(analysis, exp_stats):
+    """Suggestions about the CV on its own, most useful first.
+    Uncapped; callers apply MAX_SUGGESTIONS."""
+    suggestions = []
+    work_experience = analysis.get("work_experience", [])
 
     if exp_stats["entries"] == 0:
         suggestions.append(
@@ -312,7 +322,7 @@ def generate_suggestions(analysis, match_score, missing_keywords, has_jd, exp_st
             example = _snippet(no_metric[0])
             suggestions.append(
                 f"{len(no_metric)} of your {len(all_bullets)} experience bullets have no "
-                f"measurable result — e.g. \"{example}\" Add numbers (%, $, time saved, "
+                f"measurable result, e.g. \"{example}\" Add numbers (%, $, time saved, "
                 "team size) to show impact."
             )
 
@@ -335,12 +345,12 @@ def generate_suggestions(analysis, match_score, missing_keywords, has_jd, exp_st
         )
     if len(analysis["skills"]["soft"]) < 2:
         suggestions.append(
-            "Add a couple of soft skills (e.g. leadership, communication, teamwork) — "
+            "Add a couple of soft skills (e.g. leadership, communication, teamwork); "
             "ideally evidenced in your experience bullets rather than just listed."
         )
 
     if not analysis["education"]:
-        suggestions.append("No education detected — add a clearly labelled Education section.")
+        suggestions.append("No education detected. Add a clearly labelled Education section.")
     if not analysis["email"]:
         suggestions.append("No email address found. Make your contact details clearly visible.")
     if not analysis["phone"]:
@@ -348,67 +358,159 @@ def generate_suggestions(analysis, match_score, missing_keywords, has_jd, exp_st
 
     if analysis["word_count"] < 150:
         suggestions.append(
-            f"At {analysis['word_count']} words the resume is very thin — expand on your "
+            f"At {analysis['word_count']} words the resume is very thin; expand on your "
             "experience and projects."
         )
     elif analysis["word_count"] > 1000:
         suggestions.append(
-            f"At {analysis['word_count']} words the resume is long — tighten it toward 1–2 pages."
+            f"At {analysis['word_count']} words the resume is long; tighten it toward 1–2 pages."
         )
 
-    if not suggestions:
-        return ["Strong resume — it covers contact details, skills, education and quantified experience."]
-
-    return suggestions[:6]
+    return suggestions
 
 
-def score_resume(resume_text, job_description, analysis, skill_match=None):
-    """Score the resume.
+CV_QUALITY_WEIGHTS = {
+    "experience": 0.30,
+    "skills": 0.20,
+    "contact": 0.15,
+    "language": 0.15,
+    "education": 0.10,
+    "length": 0.10,
+}
 
-    `skill_match` is the optional output of `jd_parser.match_required_skills`.
-    It is used only to explain a low relevance score that sits next to high
-    required-skill coverage; scoring itself does not depend on it.
 
-    Each category is normalized to 0-100 against an achievable max. The total is a
-    weighted average over the categories that apply (the 'relevance' category is
-    only included when a job description is provided), so it is always on a
-    consistent 0-100 scale.
-    """
-    has_jd = bool(job_description.strip())
-    match_score = calculate_match_score(resume_text, job_description) if has_jd else 0.0
-    missing_keywords = find_missing_keywords(resume_text, job_description)
+def grammar_suggestion(grammar_result):
+    """One suggestion summarising the grammar check, or None if there is nothing to fix."""
+    if not grammar_result or not grammar_result.get("issue_count"):
+        return None
+    examples = ", ".join(
+        f"'{i['text']}' → '{i['suggestions'][0]}'"
+        for i in grammar_result["issues"][:3]
+        if i["suggestions"]
+    )
+    msg = f"Fix {grammar_result['issue_count']} grammar/spelling issue(s)"
+    return f"{msg} (e.g. {examples})." if examples else f"{msg}."
 
+
+def _length_score(word_count):
+    if word_count < 150:
+        return word_count / 150 * 100
+    if word_count > 1000:
+        return 50.0
+    return 100.0
+
+
+def score_cv_quality(analysis, grammar_result):
+    """CV quality score (0-100), based on the CV only.
+
+    Weights are in CV_QUALITY_WEIGHTS and were chosen by hand. If the grammar
+    checker is not available, the language part is skipped and the rest rescaled."""
     exp_stats = _experience_stats(analysis["work_experience"])
-    duration_score = min(analysis["experience_years"] / 5 * 100, 100)
-    if exp_stats["entries"]:
-        experience_score = 0.6 * duration_score + 0.4 * _experience_quality(exp_stats)
-    else:
-        experience_score = duration_score
-
-    categories = {
-        "skills": min(len(analysis["skills"]["technical"]) / 5 * 100, 100),
+    parts = {
+        "experience": _experience_quality(exp_stats),
+        "skills": min(len(analysis["skills"]["technical"]) / 5 * 100, 100.0),
+        "contact": 50.0 * bool(analysis["email"]) + 50.0 * bool(analysis["phone"]),
         "education": 100.0 if analysis["education"] else 0.0,
-        "experience": experience_score,
+        "length": _length_score(analysis["word_count"]),
     }
-    if has_jd:
-        categories["relevance"] = float(match_score)
+    if grammar_result and grammar_result.get("available"):
+        parts["language"] = max(0.0, 100.0 - 10 * grammar_result["issue_count"])
 
-    if has_jd:
-        weights = {"skills": 0.30, "education": 0.20, "experience": 0.20, "relevance": 0.30}
-    else:
-        weights = {"skills": 30 / 70, "education": 20 / 70, "experience": 20 / 70}
+    total_weight = sum(CV_QUALITY_WEIGHTS[k] for k in parts)
+    breakdown = {
+        k: {"score": round(parts[k], 1), "weight": round(CV_QUALITY_WEIGHTS[k] / total_weight, 4)}
+        for k in CV_QUALITY_WEIGHTS if k in parts
+    }
+    score = sum(parts[k] * CV_QUALITY_WEIGHTS[k] for k in parts) / total_weight
 
-    total_score = sum(categories[k] * weights[k] for k in categories)
+    suggestions = generate_general_suggestions(analysis, exp_stats)[:MAX_SUGGESTIONS] or [STRONG_RESUME]
+    grammar_tip = grammar_suggestion(grammar_result)
+    if grammar_tip:
+        suggestions.insert(0, grammar_tip)
 
-    breakdown = {k: round(v, 1) for k, v in categories.items()}
-    suggestions = generate_suggestions(analysis, match_score, missing_keywords, has_jd,
-                                       exp_stats, skill_match)
+    return {"score": round(score, 1), "breakdown": breakdown, "suggestions": suggestions}
+
+
+MIN_RELIABLE_REQUIREMENTS = 5
+
+JOB_MATCH_DISCLAIMER = (
+    "This score measures how closely the wording of your CV matches the wording of "
+    "this posting. It is not a hiring decision and does not predict how an employer "
+    "or an applicant tracking system will rate you."
+)
+
+TOO_SHORT_NOTE = (
+    "This job description is too short to analyse. Paste the full posting, "
+    "including the responsibilities and requirements."
+)
+
+LOW_RELIABILITY_NOTE = (
+    "This job description lists only {n} requirement(s). The score was validated on "
+    "full postings with 9 to 11 requirements, so treat it as a rough indication."
+)
+
+
+def _reliability(n_requirements):
+    """How far the score can be trusted, from the number of requirements.
+    The cut-off MIN_RELIABLE_REQUIREMENTS is a chosen value, not a measured one."""
+    if n_requirements == 0:
+        return "insufficient", TOO_SHORT_NOTE
+    if n_requirements < MIN_RELIABLE_REQUIREMENTS:
+        return "low", LOW_RELIABILITY_NOTE.format(n=n_requirements)
+    return "normal", None
+
+
+def _requirements_check(analysis, jd_result):
+    """Compare the posting's experience and education requirements to the CV."""
+    years_required = jd_result.get("experience_required")
+    candidate_years = analysis.get("experience_years", 0)
+    return {
+        "experience": {
+            "required": years_required,
+            "candidate": candidate_years,
+            "met": None if years_required is None else candidate_years >= years_required,
+        },
+        "education": {
+            "required": jd_result.get("education_required") or [],
+            "resume_has_education": bool(analysis.get("education")),
+        },
+    }
+
+
+def score_job_match(resume_text, job_description, analysis, jd_result):
+    """How well the CV fits one posting. Never combined with CV quality.
+
+    `score` equals `calculate_match_score`, from a single `match_requirements`
+    call. It is None when the posting has no requirements."""
+    n_requirements = len(chunking.job_requirements(job_description))
+    reliability, reliability_note = _reliability(n_requirements)
+
+    try:
+        matched = chunking.match_requirements(resume_text, job_description)
+        score = _calibrate_if_matched(matched["score"])
+        evidence = matched["evidence"]
+    except Exception:
+        score = calculate_tfidf_match_score(resume_text, job_description)
+        evidence = []
+
+    if reliability == "insufficient":
+        score = None
+
+    skill_match = match_required_skills(
+        jd_result["required_skills"]["technical"], analysis["skills"]["technical"]
+    )
+    missing_keywords = find_missing_keywords(resume_text, job_description)
+    suggestions = generate_job_suggestions(analysis, score, missing_keywords, skill_match)
 
     return {
-        "total_score": round(total_score, 1),
-        "match_score": match_score,
-        "has_job_description": has_jd,
+        "score": score,
+        "reliability": reliability,
+        "reliability_note": reliability_note,
+        "requirement_count": n_requirements,
+        "evidence": evidence,
+        "skill_match": skill_match,
         "missing_keywords": missing_keywords,
-        "suggestions": suggestions,
-        "breakdown": breakdown,
+        "requirements_check": _requirements_check(analysis, jd_result),
+        "suggestions": suggestions[:MAX_SUGGESTIONS],
+        "disclaimer": JOB_MATCH_DISCLAIMER,
     }
