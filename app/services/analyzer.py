@@ -93,7 +93,7 @@ def extract_phone(text):
         for match in phonenumbers.PhoneNumberMatcher(
             text, region, leniency=phonenumbers.Leniency.POSSIBLE
         ):
-            num = match.number
+            num = phonenumbers.parse(match.raw_string, region, keep_raw_input=True)
             if num.country_code_source in explicit_cc and phonenumbers.is_possible_number(num):
                 return phonenumbers.format_number(num, fmt)
 
